@@ -14,3 +14,8 @@ library(cowplot)
 library(patchwork)
 ```
 
+```{r}
+data <- read.csv("data/menu 2.csv")
+glimpse(data)
+```
+
