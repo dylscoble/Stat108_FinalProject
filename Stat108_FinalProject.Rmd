@@ -1,6 +1,6 @@
 ---
 title: "Stat108_FinalProject"
-author: "Dylan Scoble"
+author: "Dylan Scoble and Aisha Lakshman"
 date: "2/4/2022"
 output: pdf_document
 ---
