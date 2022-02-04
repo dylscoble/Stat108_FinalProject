@@ -1,0 +1,16 @@
+---
+title: "Stat108_FinalProject"
+author: "Dylan Scoble"
+date: "2/4/2022"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(knitr)
+library(broom)
+library(cowplot)
+library(patchwork)
+```
+
