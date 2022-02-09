@@ -1,0 +1,95 @@
+---
+title: "class_feb8"
+author: "Dylan Scoble"
+date: "2/8/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(knitr)
+library(broom)
+library(patchwork)
+```
+
+```{r}
+tips <- read_csv("../../stat108_w22_students-main/datasets/tip-data.csv") %>%
+  filter(!is.na(Party))
+
+glimpse(tips)
+```
+
+```{r}
+ggplot(data=tips, aes(x=Tip)) +
+  geom_histogram() +
+  labs(x="Tip Amount",
+       y="Number of Occurences")
+```
+
+
+```{r}
+p1 <- ggplot(data=tips, aes(x=Party)) +
+  geom_histogram() +
+  labs(title="Party Size")
+
+p2 <- ggplot(data=tips, aes(x=Meal)) +
+  geom_bar() +
+  labs(title="Meal Time")
+
+p3 <- ggplot(data=tips, aes(x=Age)) +
+  geom_bar() +
+  labs(title="Age of Payer")
+
+p1+p2+p3
+```
+
+```{r}
+p21 <- ggplot(data=tips, aes(x=Party, y=Tip)) +
+  geom_point() +
+  labs(title="Tips vs Party Size")
+
+p22 <- ggplot(data=tips, aes(x=Meal,y=Tip)) +
+  geom_boxplot() +
+  labs(title="Tips vs Meal Time")
+
+p23 <- ggplot(data=tips, aes(x=Age,y=Tip)) +
+  geom_boxplot() +
+  labs(title="Tips vs Age of Payer")
+
+p21+p22+p23
+```
+
+
+```{r}
+model1 <- lm(Tip ~ Party + Age, data=tips)
+tidy(model1, conf.int=TRUE) %>%
+  kable(format="markdown", digits=3)
+```
+
+```{r}
+model0 <- lm(Tip ~ 1, data=tips)
+kable(anova(model0, model1), format="markdown", digits=3)
+```
+
+```{r}
+model.tips = lm(Tip ~ Party + Age + Meal, data=tips)
+tidy(model.tips) %>%
+  select(term, estimate) %>%
+  kable(format="markdown", digits=3)
+```
+```{r}
+reduced <- lm(Tip ~ Party + Age, data=tips)
+full <- lm(Tip ~ Party + Age + Meal, data=tips)
+anova(reduced, full) %>%
+  kable(format="markdown", digits=3)
+
+```
+
+```{r}
+reduced <- lm(Tip ~ Party + Age + Meal, data=tips)
+full <- lm(Tip ~ Age + Party*Meal, data=tips)
+anova(reduced, full) %>%
+  kable(format="markdown", digits=3)
+```
+
