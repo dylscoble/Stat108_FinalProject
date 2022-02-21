@@ -13,7 +13,7 @@ given menu item or specifies information about the given menu item.
 
 Data Dictionary:
 
-10 of the key variables we will be exploring in this statistical analysis include:
+18 of the key variables we will be exploring in this statistical analysis include:
 
 Category: The type of food or beverage that the menu item is
 
