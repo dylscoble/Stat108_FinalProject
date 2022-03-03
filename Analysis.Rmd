@@ -101,4 +101,24 @@ bev_data %>%
             iqr = IQR(Calories))
 ```
 
+# Regression
+
+```{r}
+food_model = lm(Calories ~ Total.Fat + Saturated.Fat + Trans.Fat + Cholesterol + Sodium + Carbohydrates +
+         Dietary.Fiber + Sugars + Protein + Vitamin.A....Daily.Value. +
+         Vitamin.C....Daily.Value. + Calcium....Daily.Value. + Iron....Daily.Value., data = food_data)
+
+tidy(food_model, conf.int = TRUE) %>% 
+  kable(format="markdown", digits = 5)
+```
+
+
+
+```{r}
+bev_model = lm(Calories ~ Total.Fat + Sodium + Carbohydrates + Sugars + Protein + Vitamin.A....Daily.Value. +
+         Vitamin.C....Daily.Value. + Calcium....Daily.Value. + Iron....Daily.Value., data = bev_data)
+
+tidy(bev_model, conf.int = TRUE) %>% 
+  kable(format="markdown", digits = 5)
+```
 
