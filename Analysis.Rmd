@@ -4,6 +4,9 @@ author: "Dylan Scoble and Aisha Lakshman"
 date: "2/4/2022"
 output: pdf_document
 ---
+
+# Introduction
+
 In the 2004 documentary Super Size Me, writer and director Morgan Spurlock took on a month-long challenge to only eat McDonalds food. Spurlock experienced a multitude of health issues, including weight gain, cholesterol spike, and negative impacts on his energy and mood, demonstrating the fast-food chains’ instrumental role in America’s obesity epidemic (Stossel 2006). Spurlock’s film not only emphasized the consequences of caloric intake, but also brought light to the nutritional attributes of McDonalds menu items that caused adverse health effects. There are many factors that impact the quality and quantity of calories, such as levels of fat, protein, and carbohydrates, which is why many dieticians support the notion that  “not all calories are created equal” (Tolar-Peterson, 2021). Spurlock’s documentary and existing literature inspired an investigation of McDonalds menu items’ caloric and nutritional records. Our research will address the following question: What nutritional attribute is the best predictor of calories for the McDonalds menu items? We hypothesize that carbohydrates are the most accurate predictor of calories for McDonald's menu items. We will analyze a 2018 dataset from Kaggle titled “Nutritional Facts for McDonald's Menu” to answer our research question. Our chosen dataset provides nutritional information for all of McDonald’s menu items, including calories, saturated fat, and cholesterol levels. 
  
 References
@@ -22,8 +25,79 @@ library(cowplot)
 library(patchwork)
 ```
 
+
+# Our Data
+
 ```{r}
 data <- read.csv("data/menu 2.csv")
 glimpse(data)
 ```
+
+# Exploratory Data Analysis
+
+For this project, we understand that foods and beverages may have different predictors for their number of calories. Therefore, we will be splitting our dataset into two different dataframes: one for foods, and one for beverages.
+
+We will also be removing all predictors that have "as % of Daily Value" attached at the end, since our purpose is not focused the daily values of the nutrients. These predictors add no value to our dataset or models.
+
+```{r}
+data <- data %>% 
+  select(Category, Item, Serving.Size, Calories, Calories.from.Fat, Total.Fat,
+         Saturated.Fat, Trans.Fat, Cholesterol, Sodium, Carbohydrates,
+         Dietary.Fiber, Sugars, Protein, Vitamin.A....Daily.Value.,
+         Vitamin.C....Daily.Value., Calcium....Daily.Value., Iron....Daily.Value.)
+
+glimpse(data)
+```
+
+
+```{r}
+count(data, Category)
+```
+
+```{r}
+food_data <- data %>% 
+  filter(Category == "Beef & Pork" |
+         Category == "Breakfast" |
+         Category == "Chicken & Fish" |
+         Category == "Desserts" |
+         Category == "Salads" |
+         Category == "Snacks & Sides")
+
+bev_data <- data %>%
+  filter(Category == "Beverages" |
+         Category == "Coffee & Tea" |
+         Category == "Smoothies & Shakes")
+```
+
+ 
+### Response Variable
+
+```{r}
+ggplot(data=food_data, aes(x=Calories)) +
+  geom_histogram() +
+  labs(title="Histogram of Response Variable",
+       x="Number of Calories",
+       y="Number of Occurrences")
+
+ggplot(data=bev_data, aes(x=Calories)) +
+  geom_histogram() +
+  labs(title="Histogram of Response Variable",
+       x="Number of Calories",
+       y="Number of Occurrences")
+```
+
+```{r}
+food_data %>% 
+  summarise(mean = mean(Calories),
+            median = median(Calories),
+            std_dev = sd(Calories),
+            iqr = IQR(Calories))
+
+bev_data %>% 
+  summarise(mean = mean(Calories),
+            median = median(Calories),
+            std_dev = sd(Calories),
+            iqr = IQR(Calories))
+```
+
 
