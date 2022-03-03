@@ -40,6 +40,8 @@ For this project, we understand that foods and beverages may have different pred
 
 We will also be removing all predictors that have "as % of Daily Value" attached at the end, since our purpose is not focused the daily values of the nutrients. These predictors add no value to our dataset or models.
 
+The first thing we are doing is filtering out Total Fat (% Daily Value), Saturated Fat (% Daily Value), Cholesterol (% Daily Value), Sodium (% Daily Value), Carbohydrataes (% Daily Value), Dietary Fiber (% Daily Value) from our nutritional attributes. These attributes don’t aid to answering our research question, so we are taking these predictor variables out of consideration. 
+
 ```{r}
 data <- data %>% 
   select(Category, Item, Serving.Size, Calories, Calories.from.Fat, Total.Fat,
@@ -54,6 +56,8 @@ glimpse(data)
 ```{r}
 count(data, Category)
 ```
+
+Next, we are dividing our categorical variables between food items (Breakfast, Beef & Pork, Chicken & Fish, Salads, Snacks & Sides, Desserts) and drink items (Coffee and Tea, Smoothies and Shakes, Beverages).
 
 ```{r}
 food_data <- data %>% 
@@ -73,6 +77,8 @@ bev_data <- data %>%
  
 ### Response Variable
 
+The next step is to create histograms for occurences of food items (food_data) and occurences of drink items (bev_data) against our response variable (calories) 
+
 ```{r}
 ggplot(data=food_data, aes(x=Calories)) +
   geom_histogram() +
@@ -86,6 +92,8 @@ ggplot(data=bev_data, aes(x=Calories)) +
        x="Number of Calories",
        y="Number of Occurrences")
 ```
+
+Now we calculate the appropriate summary statistics for calories (mean, median, standard deviation, IQR) for food items and drink items.
 
 ```{r}
 food_data %>% 
