@@ -140,6 +140,8 @@ Now, we will select a model for food items using AIC. We are using the step func
 food_model_select_aic <- step(food_model, direction = "backward")
 tidy(food_model_select_aic) %>% 
   kable(format="markdown", digits=3)
+
+coef(food_model_select_aic, 4)
 ```
 For food products, the predictors that give us the best model for predicting calorie count are:
   -Total.Fat
@@ -162,6 +164,8 @@ Now, we will select a model for drink items using AIC. We are using the step fun
 bev_model_select_aic <- step(bev_model, direction = "backward")
 tidy(bev_model_select_aic) %>% 
   kable(format="markdown", digits=3)
+
+coef(bev_model_select_aic, 4)
 ```
 For Beverages, the predictors that give us the best model for predicting calorie count are:
   -Total.Fat
