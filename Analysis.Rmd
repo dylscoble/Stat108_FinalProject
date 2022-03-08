@@ -111,6 +111,8 @@ bev_data %>%
 
 # Regression
 
+The code below creates a linear model for McDonalds food menu items and displays the model output.  
+
 ```{r}
 food_model = lm(Calories ~ Total.Fat + Saturated.Fat + Trans.Fat + Cholesterol + Sodium + Carbohydrates +
          Dietary.Fiber + Sugars + Protein + Vitamin.A....Daily.Value. +
@@ -120,7 +122,7 @@ tidy(food_model, conf.int = TRUE) %>%
   kable(format="markdown", digits = 5)
 ```
 
-
+The code below creates a linear model for McDonald's drink menu items and displays the model output.
 
 ```{r}
 bev_model = lm(Calories ~ Total.Fat + Sodium + Carbohydrates + Sugars + Protein + Vitamin.A....Daily.Value. +
