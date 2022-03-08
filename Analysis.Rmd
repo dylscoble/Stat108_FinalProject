@@ -132,3 +132,4 @@ tidy(bev_model, conf.int = TRUE) %>%
   kable(format="markdown", digits = 5)
 ```
 
+
