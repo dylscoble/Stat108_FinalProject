@@ -24,6 +24,8 @@ library(knitr)
 library(broom)
 library(cowplot)
 library(patchwork)
+library(leaps)
+library(rms)
 ```
 
 
@@ -132,4 +134,42 @@ tidy(bev_model, conf.int = TRUE) %>%
   kable(format="markdown", digits = 5)
 ```
 
+Now, we will select a model for food items using AIC. We are using the step function in R to conduct backward selection using AIC as the selection criterion, and storing the selected model as food_model_select_aic. Finally, we display the coefficients of the selected model.  
 
+```{r}
+food_model_select_aic <- step(food_model, direction = "backward")
+tidy(food_model_select_aic) %>% 
+  kable(format="markdown", digits=3)
+```
+For food products, the predictors that give us the best model for predicting calorie count are:
+  -Total.Fat
+  -Saturated.Fat
+  -Trans.Fat
+  -Cholesterol
+  -Sodium
+  -Carbohydrates
+  -Dietary.Fiber
+  -Sugars
+  -Protein
+  -Vitamin.A….Daily.Value.
+  -Vitamin.C….Daily.Value.
+  -Calcium….Daily.Value.
+  -Iron….Daily.Value.
+  
+Now, we will select a model for drink items using AIC. We are using the step function in R to conduct backward selection using AIC as the selection criterion, and storing the selected model as bev_model_select_aic. Finally, we display the coefficients of the selected model.
+
+```{r}
+bev_model_select_aic <- step(bev_model, direction = "backward")
+tidy(bev_model_select_aic) %>% 
+  kable(format="markdown", digits=3)
+```
+For Beverages, the predictors that give us the best model for predicting calorie count are:
+  -Total.Fat
+  -Sodium
+  -Carbohydrates
+  -Sugars
+  -Protein
+  -Vitamin.A….Daily.Value.
+  -Vitamin.C….Daily.Value.
+  -Calcium….Daily.Value.
+  -Iron….Daily.Value.
