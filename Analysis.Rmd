@@ -26,6 +26,7 @@ library(cowplot)
 library(patchwork)
 library(leaps)
 library(rms)
+library(modelr)
 ```
 
 
@@ -113,6 +114,7 @@ bev_data %>%
 
 # Regression
 
+### Model Selection with AIC
 The code below creates a linear model for McDonalds food menu items and displays the model output.  
 
 ```{r}
@@ -177,3 +179,103 @@ For Beverages, the predictors that give us the best model for predicting calorie
   -Vitamin.C….Daily.Value.
   -Calcium….Daily.Value.
   -Iron….Daily.Value.
+
+
+The code and its output below show us that the best predictors of food calories in order are Total Fat, Carbohydrates, and Protein.
+```{r}
+food_models <- regsubsets(Calories ~ Total.Fat + Saturated.Fat + Trans.Fat + Cholesterol + Sodium + Carbohydrates +
+         Dietary.Fiber + Sugars + Protein + Vitamin.A....Daily.Value. +
+         Vitamin.C....Daily.Value. + Calcium....Daily.Value. + Iron....Daily.Value., data = food_data, method="backward")
+summary(food_models)
+```
+
+
+The code and its output below show us that the best predictors of beverage calories in order are  Carbohydrates, Total Fat, and Protein
+```{r}
+bev_models <- regsubsets(Calories ~ Total.Fat + Saturated.Fat + Trans.Fat + Cholesterol + Sodium + Carbohydrates +
+         Dietary.Fiber + Sugars + Protein + Vitamin.A....Daily.Value. +
+         Vitamin.C....Daily.Value. + Calcium....Daily.Value. + Iron....Daily.Value., data = bev_data, method="backward")
+summary(bev_models)
+```
+
+Because both foods and beverages have the same variables marked as their best predictors, we can conclude that splitting our dataset is unnecesary. Working with the full dataset at once will allow us to make better predictions, so we will recombine our data.
+
+### Model Selection with K-fold Cross Validoation
+
+We will be comparing the predictors mentioned above regarding their relationship to Calories. For food and beverages, we will create four models each: one with each variable as the singular predictor. We will compare these models using K-fold Cross Validation, where k = 5.
+
+
+```{r}
+set.seed(5747108)
+folded_data <- crossv_kfold(data, 5)
+```
+
+Testing the Total Fat predictor:
+```{r}
+models_fat <- map(folded_data$train, 
+              ~ lm(Calories ~ Total.Fat, data = .))
+models_fat
+```
+
+```{r}
+train_mse_fat <- map2_dbl(models_fat, folded_data$train, mse)
+test_mse_fat <- map2_dbl(models_fat, folded_data$test, mse)
+
+fat <- tibble(
+  1:5,
+  train_mse_fat, 
+  test_mse_fat
+)
+
+fat %>%
+  summarise(mean_train_mse = mean(train_mse_fat), 
+           mean_test_mse = mean(test_mse_fat))
+```
+
+Testing the Carbohydrates predictor:
+```{r}
+models_carb <- map(folded_data$train, 
+              ~ lm(Calories ~ Carbohydrates, data = .))
+models_carb
+```
+
+```{r}
+train_mse_carb <- map2_dbl(models_carb, folded_data$train, mse)
+test_mse_carb <- map2_dbl(models_carb, folded_data$test, mse)
+
+carb <- tibble(
+  test_fold = 1:5,
+  train_mse_carb, 
+  test_mse_carb
+)
+
+carb %>%
+  summarise(mean_train_mse = mean(train_mse_carb), 
+           mean_test_mse = mean(test_mse_carb))
+
+```
+
+
+Testing the Protein predictor:
+```{r}
+models_protein <- map(folded_data$train, 
+              ~ lm(Calories ~ Protein, data = .))
+models_protein
+```
+
+```{r}
+train_mse_protein <- map2_dbl(models_protein, folded_data$train, mse)
+test_mse_protein <- map2_dbl(models_protein, folded_data$test, mse)
+
+protein <- tibble(
+  1:5,
+  train_mse_protein, 
+  test_mse_protein
+)
+
+protein %>%
+  summarise(mean_train_mse = mean(train_mse_protein), 
+           mean_test_mse = mean(test_mse_protein))
+```
+
+From our K-fold cross validation test, we can conclude that Total Fat is the best singular predictor of Calories, which goes against our hypothesis. We see that Protein and Carbohydrates have similar effectiveness in predicting calories, but total fat content is about twice as effective. 
