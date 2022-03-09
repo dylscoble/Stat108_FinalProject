@@ -113,7 +113,7 @@ bev_data %>%
 
 # Regression
 
-The code below creates a linear model for McDonalds food menu items and displays the model output.  
+The code below creates a linear model for McDonald's food menu items and displays the model output.  
 
 ```{r}
 food_model = lm(Calories ~ Total.Fat + Saturated.Fat + Trans.Fat + Cholesterol + Sodium + Carbohydrates +
