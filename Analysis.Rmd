@@ -292,7 +292,7 @@ tidy(final_model) %>%
   kable(format="markdown", digits = 5)
 ```
 
-### Checking the Linearity Assumption
+### Checking the Model Assumptions
 
 ```{r}
 final_model <- augment(final_model, type.predict = "response",type.residuals = "deviance")
@@ -322,5 +322,11 @@ ggplot(data = final_model, aes(x=.fitted, y=Total.Fat)) +
        x="Fitted Values",
        y="Total Fat")
 ```
+
+A crucial assumption of linear regression is the independence of observations. Looking at how our data was collected will indicate if the independence assumption is satisfied or not. Given that our dataset consists of nutritional attributes for each McDonalds menu item, each observation is independent. A menu item’s observed nutritional attributes does not rely on other menu items. In part by FDA Menu Labeling Requirements (2020) the process by which our data was collected ensures we are working with a random sample and the validity of our data. 
+
+References 
+Food and Drug Administration. 2020. “Menu and Food Labeling Requirements”. 
+https://www.fda.gov/food/food-labeling-nutrition/menu-labeling-requirements  
 
 
