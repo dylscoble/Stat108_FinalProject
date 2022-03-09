@@ -323,7 +323,7 @@ ggplot(data = final_model, aes(x=.fitted, y=Total.Fat)) +
        y="Total Fat")
 ```
 
-A crucial assumption of linear regression is the independence of observations. Looking at how our data was collected will indicate if the independence assumption is satisfied or not. Given that our dataset consists of nutritional attributes for each McDonalds menu item, each observation is independent. A menu item’s observed nutritional attributes does not rely on other menu items. In part by FDA Menu Labeling Requirements (2020) the process by which our data was collected ensures we are working with a random sample and the validity of our data. 
+A crucial assumption of linear regression is the independence of observations. Looking at how our data was collected will indicate if the independence assumption is satisfied or not. Given that our dataset consists of nutritional attributes for each McDonalds menu item, each observation is independent. A menu item’s observed nutritional attributes does not rely on other menu items. In part by FDA Menu Labeling Requirements (2020) the process by which our data was collected ensures data validity and that we are working with a random sample. 
 
 References 
 Food and Drug Administration. 2020. “Menu and Food Labeling Requirements”. 
