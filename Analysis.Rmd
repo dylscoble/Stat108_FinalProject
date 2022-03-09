@@ -8,7 +8,7 @@ output: pdf_document
 
 # Introduction
 
-In the 2004 documentary Super Size Me, writer and director Morgan Spurlock took on a month-long challenge to only eat McDonalds food. Spurlock experienced a multitude of health issues, including weight gain, cholesterol spike, and negative impacts on his energy and mood, demonstrating the fast-food chains’ instrumental role in America’s obesity epidemic (Stossel 2006). Spurlock’s film not only emphasized the consequences of caloric intake, but also brought light to the nutritional attributes of McDonalds menu items that caused adverse health effects. There are many factors that impact the quality and quantity of calories, such as levels of fat, protein, and carbohydrates, which is why many dieticians support the notion that  “not all calories are created equal” (Tolar-Peterson, 2021). Spurlock’s documentary and existing literature inspired an investigation of McDonalds menu items’ caloric and nutritional records. Our research will address the following question: What nutritional attribute is the best predictor of calories for the McDonalds menu items? Since drink and food items have quite different caloric makeups, we are dividing our dataset between food menu items (Breakfast, Beef & Pork, Chicken & Fish, Salads, Snacks & Sides, Desserts) and drink menu items (Coffee and Tea, Smoothies and Shakes, Beverages). For food menu items, we hypothesize total carbohydrates (grams) is the most accurate predictor of calories. For drink menu items, we hypothesize that total sugar (grams) is the most accurate predictor of calories We will analyze a 2018 dataset from Kaggle titled “Nutritional Facts for McDonald's Menu” to answer our research question. Our chosen dataset provides nutritional information for all of McDonald’s menu items, including calories, saturated fat, and cholesterol levels. We will create a linear model for each nutritional attribute with calories as the response variable for each predictor. A linear model for regression analysis is useful in answering our question because it will allow us to confidently determine what nutritional attributes matter the most for calories and predict an item’s calorie count based on its predictors.
+In the 2004 documentary Super Size Me, writer and director Morgan Spurlock took on a month-long challenge to only eat McDonalds food. Spurlock experienced a multitude of health issues, including weight gain, cholesterol spike, and negative impacts on his energy and mood, demonstrating the fast-food chains’ instrumental role in America’s obesity epidemic (Stossel 2006). Spurlock’s film not only emphasized the consequences of caloric intake, but also brought light to the nutritional attributes of McDonalds menu items that caused adverse health effects. There are many factors that impact the quality and quantity of calories, such as levels of fat, protein, and carbohydrates, which is why many dieticians support the notion that  “not all calories are created equal” (Tolar-Peterson, 2021). Spurlock’s documentary and existing literature inspired an investigation of McDonalds menu items’ caloric and nutritional records. Our research will address the following question: What nutritional attribute is the best predictor of calories for the McDonalds menu items? Since drink and food items have quite different caloric makeups, we are dividing our dataset between food menu items (Breakfast, Beef & Pork, Chicken & Fish, Salads, Snacks & Sides, Desserts) and drink menu items (Coffee and Tea, Smoothies and Shakes, Beverages). For food menu items, we hypothesize total carbohydrates (grams) is the most accurate predictor of calories. For drink menu items, we hypothesize that total sugar (grams) is the most accurate predictor of calories. We will analyze a 2018 dataset from Kaggle titled “Nutritional Facts for McDonald's Menu” to answer our research question. Our chosen dataset provides nutritional information for all of McDonald’s menu items, including calories, saturated fat, and cholesterol levels. We will create a linear model for each nutritional attribute with calories as the response variable for each predictor. A linear model for regression analysis is useful in answering our question because it will allow us to confidently determine what nutritional attributes matter the most for calories and predict an item’s calorie count based on its predictors.
 
 
 ### References
@@ -279,3 +279,45 @@ protein %>%
 ```
 
 From our K-fold cross validation test, we can conclude that Total Fat is the best singular predictor of Calories, which goes against our hypothesis. We see that Protein and Carbohydrates have similar effectiveness in predicting calories, but total fat content is about twice as effective. 
+
+# Final Model
+
+```{r}
+final_model <- lm(Calories ~ Total.Fat, data=data)
+
+tidy(final_model) %>% 
+  kable(format="markdown", digits = 5)
+```
+
+### Checking the Linearity Assumption
+
+```{r}
+final_model <- augment(final_model, type.predict = "response",type.residuals = "deviance")
+glimpse(final_model)
+```
+
+Based on the plot below, the normality assumption is satisfied because our model's residuals follow a normal distribution with mean zero.
+```{r}
+hist(final_model$.resid)
+```
+
+
+Based on the plot below, the constant variance assumption is satisfied because there is no fan pattern when comparing our fitted values to our residuals. 
+```{r}
+ggplot(data = final_model, aes(x=.fitted, y=.resid)) +
+  geom_point() +
+  labs(title="Residuals vs Predicted Values",
+       x="Fitted Values",
+       y="Residuals")
+```
+
+Based on the plot below, the linearity assumption is satisfied because there is a very clear linear relationship between our fitted values and our predictor.
+```{r}
+ggplot(data = final_model, aes(x=.fitted, y=Total.Fat)) +
+  geom_point() +
+  labs(title="Fitted Values vs Total Fat",
+       x="Fitted Values",
+       y="Total Fat")
+```
+
+
