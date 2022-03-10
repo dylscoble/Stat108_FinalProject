@@ -80,7 +80,7 @@ bev_data <- data %>%
  
 ### Response Variable
 
-The next step is to create histograms for occurences of food items (food_data) and occurences of drink items (bev_data) against our response variable (calories) 
+The next step is to create histograms for occurences of food items (food_data) and occurences of drink items (bev_data) against our response variable (calories). Based on the plots below, it seems that for both datasets, the Calories variable follows a normal distribution.
 
 ```{r}
 ggplot(data=food_data, aes(x=Calories)) +
@@ -112,13 +112,8 @@ bev_data %>%
             iqr = IQR(Calories))
 ```
 
-# Regression
-
-The code below creates a linear model for McDonald's food menu items and displays the model output.  
-
 ### Model Selection with AIC
 The code below creates a linear model for McDonalds food menu items and displays the model output.  
->>>>>>> a2711ab1c8d1f8953497bb408d1d3f37c26e1f32
 
 ```{r}
 food_model = lm(Calories ~ Total.Fat + Saturated.Fat + Trans.Fat + Cholesterol + Sodium + Carbohydrates +
@@ -207,7 +202,6 @@ When first starting the analysis we decided to divide our data between food and 
 
 We will be comparing the predictors mentioned above regarding their relationship to Calories. For food and beverages, we will create four models each: one with each variable as the singular predictor. We will compare these models using K-fold Cross Validation, where k = 5.
 
-
 ```{r}
 set.seed(5747108)
 folded_data <- crossv_kfold(data, 5)
@@ -285,6 +279,7 @@ From our K-fold cross validation test, we can conclude that Total Fat is the bes
 
 # Final Model
 
+The final model for our project represents calories as a linear function of Total Fat. The equation for this relationship is $Calories = 15.297 * Total.Fat + 151.588$. 
 ```{r}
 final_model <- lm(Calories ~ Total.Fat, data=data)
 
@@ -305,7 +300,7 @@ hist(final_model$.resid)
 ```
 
 
-Based on the plot below, the constant variance assumption is satisfied because there is no fan pattern when comparing our fitted values to our residuals. 
+Based on the plot below, the constant variance assumption is satisfied because there is no fan pattern when comparing our fitted values to our residuals. The variance remains relatively constant throughout all of our model's fitted values, despite some outliers.
 ```{r}
 ggplot(data = final_model, aes(x=.fitted, y=.resid)) +
   geom_point() +
@@ -314,7 +309,7 @@ ggplot(data = final_model, aes(x=.fitted, y=.resid)) +
        y="Residuals")
 ```
 
-Based on the plot below, the linearity assumption is satisfied because there is a very clear linear relationship between our fitted values and our predictor.
+Based on the plot below, the linearity assumption is satisfied because there is a very clear linear relationship between our fitted values and our predictor. This is obvious because our model is a linear relationship between only one predictor and the response variable.
 ```{r}
 ggplot(data = final_model, aes(x=.fitted, y=Total.Fat)) +
   geom_point() +
