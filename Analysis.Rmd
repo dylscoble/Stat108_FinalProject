@@ -118,8 +118,7 @@ kable(as_tibble(head(bev_data)))  %>%
 
 ### Response Variable
 
-The next step is to create histograms for occurences of food items (food_data) and occurences of drink items (bev_data) against our response variable (calories). Based on the plots below, it seems that for both datasets, the Calories variable follows a normal distribution. 
-^ AISHA can u add a sentence why the normal distribution is a good thing
+The next step is to create histograms for occurrences of food items (food_data) and occurrences of drink items (bev_data) against our response variable (calories). Based on the plots below, it seems that for both datasets, the Calories variable follows a normal distribution. A normal distribution tells us that data is centered around the mean and there are no obvious outliers. Additionally, a normal distribution is a good indicator of data independence. 
 
 ```{r echo = FALSE, fig.width = 5, fig.height = 3, warning = FALSE}
 p1 <- ggplot(data=food_data, aes(x=Calories)) +
@@ -163,8 +162,7 @@ kable(t2, format = "markdown")
 
 ### Estimator Variables
 
-We also want to view a plot of each variable's relationship with our response. Below is every plot that describes the food dataset. 
-^ AISHA can you add some here that talks about what the plots are showing and why we are showing them
+We also want to view a plot of each variable's relationship with our response. Below is every plot that describes the food dataset. We are creating a plot for each estimator (nutritional attribute) against our response variable (calories). These plots allow us to visualize the relationship between each estimator and calories for food menu items. 
 
 ```{r echo = FALSE, fig.width = 17, fig.height = 17, warning = FALSE}
 p3 <- ggplot(data = food_data, aes(x = Calories, y = Total.Fat.cent)) +
@@ -199,13 +197,10 @@ p10 <- ggplot(data = food_data, aes(x = Calories, y = Protein.cent)) +
                geom_point() +
                labs(title = "FOOD: Calories vs. Protein")
 
-<<<<<<< HEAD
-When first starting the analysis we decided to divide our data between food and drink items on the assumption that they have different caloric makeups. We split our dataset between food menu items (Breakfast, Beef & Pork, Chicken & Fish, Salads, Snacks & Sides, Desserts) and drink menu items (Coffee and Tea, Smoothies and Shakes, Beverages). For food menu items, we hypothesized total carbohydrates (grams) was most closely associated to calories. For drink menu items, we hypothesized that total sugar (grams) was most closely associated to calories. Upon completing Exploratory Data Analysis, Regression, and Model Selection, our final models (food_model_aic and bev_model_aic) indicated that best 3 predictors (nutritional attributes) were the same for food and beverage items. We then decided it would be best for our final model to encompass food and beverage data together. Our modeling objective benefits from a bigger dataset, as predictions are more accurate when working with a bigger dataset.
-=======
 p11 <- ggplot(data = food_data, aes(x = Calories, y = Sugars.cent)) +
                geom_point() +
                labs(title = "FOOD: Calories vs. Sugars")
->>>>>>> 516fefa58658964c16009afa111172b1191e6535
+
 
 p12 <- ggplot(data = food_data, aes(x = Calories, y = Vitamin.A....Daily.Value.cent)) +
                geom_point() +
@@ -226,8 +221,7 @@ p15 <- ggplot(data = food_data, aes(x = Calories, y = Iron....Daily.Value.cent))
 p3 + p4 + p5 + p6 + p7 +  p8 + p9 + p10 + p11 + p12 + p13 + p14 + p15
 ```
 
-Below is every plot that describes the beverage dataset.
-^ AISHA can you add some here that talks about what the plots are showing and why we are showing them
+Now we will repeat this process with beverage menu items. Below is every plot that describes the beverage dataset. We are creating a plot for each estimator (nutritional attribute) against our response variable (calories). These plots allow us to visualize the relationship between each estimator and calories for beverage menu items. 
 
 ```{r echo = FALSE, fig.width = 17, fig.height = 17, warning = FALSE}
 p3 <- ggplot(data = bev_data, aes(x = Calories, y = Total.Fat.cent)) +
@@ -285,9 +279,6 @@ p15 <- ggplot(data = bev_data, aes(x = Calories, y = Iron....Daily.Value.cent)) 
 p3 + p4 + p5 + p6 + p7 +  p8 + p9 + p10 + p11 + p12 + p13 + p14 + p15
 ```
 
-
-
-
 ### Model Selection with AIC
 
 In order to conduct our experiment, we create a model that uses Calories as a response variable, and all centered variables as estimators. 
@@ -331,7 +322,10 @@ When first starting the analysis we decided to divide our data between food and 
 Before accepting our results as truth, we must inspect where the data and the model come from. There are certain assumptions we were accepting as truth when conducting our experiment. In order to confirm our results, we must verify that our prior assumptions are correct.
 
 Constant Variance
+
 AISHA can you write about how these plots were created and explain that the constant variance assumption is satisfied
+
+To determine if the constant variance assumption is satisfied, we can inspect a plot of fitted values versus the residuals for food data and beverage data. The figures below plot fitted values on the x-axis and the residuals of fitted values along the y-axis. The constant variance assumption is satisfied if residual points are equally distributed with regard to the red line (residuals = 0) and if there is no clear shape or pattern in the fitted values versus residual plot. The plots below indicate that the constant variance assumption is satisfied for the food model and the beverage model. 
 
 ```{r echo = FALSE}
 ggplot(data = food_model, aes(x = food_model$fitted.values, y = food_model$residuals)) +
@@ -349,14 +343,15 @@ ggplot(data = bev_model, aes(x = bev_model$fitted.values, y = bev_model$residual
        y = "Residuals of Beverage Model")
   
 ```
-
+DYLAN change x axis label? 
 
 Linearity
 
 The plots on page 4 and 5 show that for both food and beverages, there are linear relationships between calories and other nutritional attributes. This tells us that the linearity assumption is satisfied.
 
 Normality
-AISHA can you explain the same for the normality assumption
+
+To check if the normality assumption is satisfied or not, we can inspect the distribution of the fitted values for calories. To do so, we will create a histogram of fitted values against the number of observations for the food model and beverage beverage model. The normality assumption is satisfied if the histogram follows a normal distribution. The plots below indicate that the normality distribution is satisfied for both of our models. The histogram for the food model clearly follows a normal distribution. The beverage data loosely follows a normal distribution, with the exception of a few outliers. 
 
 ```{r  echo = FALSE}
 ggplot(data = food_model, aes(x = food_model$fitted.values)) +
