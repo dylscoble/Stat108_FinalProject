@@ -331,7 +331,10 @@ When first starting the analysis we decided to divide our data between food and 
 Before accepting our results as truth, we must inspect where the data and the model come from. There are certain assumptions we were accepting as truth when conducting our experiment. In order to confirm our results, we must verify that our prior assumptions are correct.
 
 
+<<<<<<< HEAD
 Constant Variance
+=======
+>>>>>>> 354450a1af3a76cdf6ad85af4a6d045b64499fe9
 
 To determine if the constant variance assumption is satisfied, we can inspect a plot of fitted values versus the residuals for food data and beverage data. The figures below plot fitted values on the x-axis and the residuals of fitted values along the y-axis. The constant variance assumption is satisfied if residual points are equally distributed with regard to the red line (residuals = 0) and if there is no clear shape or pattern in the fitted values versus residual plot. The plots below indicate that the constant variance assumption is satisfied for the food model and the beverage model. 
 
@@ -350,7 +353,10 @@ p18 <- ggplot(data = bev_model, aes(x = bev_model$fitted.values, y = bev_model$r
 
 p17 + p18
 ```
+<<<<<<< HEAD
 
+=======
+>>>>>>> 354450a1af3a76cdf6ad85af4a6d045b64499fe9
 
 Linearity
 
@@ -376,7 +382,6 @@ p20 <- ggplot(data = bev_model, aes(x = bev_model$fitted.values)) +
 
 p19 + p20
 ```
-
 
 Independence
 
