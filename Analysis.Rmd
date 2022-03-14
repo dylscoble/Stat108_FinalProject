@@ -199,13 +199,9 @@ p10 <- ggplot(data = food_data, aes(x = Calories, y = Protein.cent)) +
                geom_point() +
                labs(title = "FOOD: Calories vs. Protein")
 
-<<<<<<< HEAD
-When first starting the analysis we decided to divide our data between food and drink items on the assumption that they have different caloric makeups. We split our dataset between food menu items (Breakfast, Beef & Pork, Chicken & Fish, Salads, Snacks & Sides, Desserts) and drink menu items (Coffee and Tea, Smoothies and Shakes, Beverages). For food menu items, we hypothesized total carbohydrates (grams) was most closely associated to calories. For drink menu items, we hypothesized that total sugar (grams) was most closely associated to calories. Upon completing Exploratory Data Analysis, Regression, and Model Selection, our final models (food_model_aic and bev_model_aic) indicated that best 3 predictors (nutritional attributes) were the same for food and beverage items. We then decided it would be best for our final model to encompass food and beverage data together. Our modeling objective benefits from a bigger dataset, as predictions are more accurate when working with a bigger dataset.
-=======
 p11 <- ggplot(data = food_data, aes(x = Calories, y = Sugars.cent)) +
                geom_point() +
                labs(title = "FOOD: Calories vs. Sugars")
->>>>>>> 516fefa58658964c16009afa111172b1191e6535
 
 p12 <- ggplot(data = food_data, aes(x = Calories, y = Vitamin.A....Daily.Value.cent)) +
                geom_point() +
