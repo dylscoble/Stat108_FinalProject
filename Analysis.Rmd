@@ -351,10 +351,7 @@ p18 <- ggplot(data = bev_model, aes(x = bev_model$fitted.values, y = bev_model$r
 
 p17 + p18
 ```
-<<<<<<< HEAD
 
-=======
->>>>>>> 354450a1af3a76cdf6ad85af4a6d045b64499fe9
 
 Linearity
 
@@ -396,9 +393,6 @@ Although this study was done specifically on the McDonald's menu, we hope that t
 \newpage
 
 # References
-
-
-References
 
 FDA. 2014. “Nutritional Labeling and Education Act (NLEA) - Attachment 1”. Retrieved March 14, 2022. 
 https://www.fda.gov/nutrition-labeling-and-education-act-nlea-requirements-attachment-1
