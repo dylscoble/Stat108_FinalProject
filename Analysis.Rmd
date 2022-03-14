@@ -398,20 +398,23 @@ Although this study was done specifically on the McDonald's menu, we hope that t
 # References
 
 
-Tolar-Peterson, Terezie. 2021. “Not all calories are created equal - a dietician explains the different ways the kinds of foods you eat matter to your body”. The Conversation. Retrieved Febuary 8th, 2022. https://theconversation.com/not-all-calories-are-equal-a-dietitian-explains-the-different-ways-the-kinds-of-foods-you-eat-matter-to-your-body-156900
- 
- 
-Stossel, John. 2006. “‘Super Size Me’ Carries Weight With Critics”. ABC News. Retrieved February 8th, 2022. https://docs.google.com/document/d/1XB-22QylvnbasBKe7n_DfkkENcZWRvIR5X8vZgOK6LY/edit#
+References
 
+FDA. 2014. “Nutritional Labeling and Education Act (NLEA) - Attachment 1”. Retrieved March 14, 2022. 
+https://www.fda.gov/nutrition-labeling-and-education-act-nlea-requirements-attachment-1
 
-Food and Drug Administration. 2020. “Menu and Food Labeling Requirements”. 
-https://www.fda.gov/food/food-labeling-nutrition/menu-labeling-requirements 
+FDA. 2020. “Menu Labeling Requirements”. Retrieved March 14, 2022.
+https://www.fda.gov/food/food-labeling-nutrition/menu-labeling-requirements
 
+Kaggle. 2016. “Nutrition Facts for McDonald’s Menu”. Retrieved February 3rd, 2022. 
+https://www.kaggle.com/mcdonalds/nutrition-facts
 
-In text: McDonalds (2017)
+McDonald’s. 2017. “McDonald’s Nutrition Calculator”. Retrieved March 14, 2022.
 https://www.mcdonalds.com/us/en-us/about-our-food/nutrition-calculator.html
 
+Stossel, John. 2006. “‘Super Size Me’ Carries Weight With Critics”. ABC News. Retrieved February 8th, 2022. 
+https://abcnews.go.com/2020/Oscars2005/story?id=124265&page=1
 
-FDA (2014) 
-https://www.fda.gov/nutrition-labeling-and-education-act-nlea-requirements-attachment-1
+Tolar-Peterson, Terezie. 2021. “Not all calories are created equal - a dietician explains the different ways the kinds of foods you eat matter to your body”. The Conversation. Retrieved Febuary 8th, 2022. https://theconversation.com/not-all-calories-are-equal-a-dietitian-explains-the-different-ways-the-kinds-of-foods-you-eat-matter-to-your-body-156900
+
 
