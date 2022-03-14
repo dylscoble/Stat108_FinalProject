@@ -322,7 +322,6 @@ Before accepting our results as truth, we must inspect where the data and the mo
 
 Constant Variance
 
-AISHA can you write about how these plots were created and explain that the constant variance assumption is satisfied
 
 To determine if the constant variance assumption is satisfied, we can inspect a plot of fitted values versus the residuals for food data and beverage data. The figures below plot fitted values on the x-axis and the residuals of fitted values along the y-axis. The constant variance assumption is satisfied if residual points are equally distributed with regard to the red line (residuals = 0) and if there is no clear shape or pattern in the fitted values versus residual plot. The plots below indicate that the constant variance assumption is satisfied for the food model and the beverage model. 
 
@@ -342,7 +341,6 @@ ggplot(data = bev_model, aes(x = bev_model$fitted.values, y = bev_model$residual
        y = "Residuals of Beverage Model")
   
 ```
-DYLAN change x axis label? 
 
 Linearity
 
@@ -366,7 +364,6 @@ ggplot(data = bev_model, aes(x = bev_model$fitted.values)) +
        y = "Number of Observations",
        title = "Beverage Model: Histogram of Fitted Values")
 ```
-
 
 Independence
 
