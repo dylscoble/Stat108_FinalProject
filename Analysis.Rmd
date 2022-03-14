@@ -8,11 +8,24 @@ output: pdf_document
 
 # Introduction
 
-In the 2004 documentary Super Size Me, writer and director Morgan Spurlock took on a month-long challenge to only eat McDonalds food. Spurlock experienced a multitude of health issues, including weight gain, cholesterol spike, and negative impacts on his energy and mood, demonstrating the fast-food chains’ instrumental role in America’s obesity epidemic (Stossel 2006). Spurlock’s film not only emphasized the consequences of caloric intake, but also brought light to the nutritional attributes of McDonalds menu items that caused adverse health effects. There are many factors that impact the quality and quantity of calories, such as levels of fat, protein, and carbohydrates, which is why many dieticians support the notion that  “not all calories are created equal” (Tolar-Peterson, 2021). Spurlock’s documentary and existing literature inspired an investigation of McDonalds menu items’ caloric and nutritional records. Our research will address the following question: What nutritional attribute is most closely associated with calories for the McDonalds menu items? We will analyze a 2018 dataset from Kaggle titled “Nutritional Facts for McDonald's Menu” to answer our research question. Our chosen dataset provides nutritional information for all of McDonald’s menu items, including calories, saturated fat, and cholesterol levels. Our research aims to guide the inspection of a nutritional label and to provide adequate information on the nutritional attributes that best estimates calories. Therefore, we will employ a modeling approach which estimates the closest association between calories and nutritional attributes. To see which nutritional attribute is the best estimator for calories, we will create a linear model for each nutritional attribute with calories as the response variable. A linear model for regression analysis is useful in answering our question because it will allow us to confidently determine what nutritional attributes hold the closest association to calories.
+In the 2004 documentary Super Size Me, writer and director Morgan Spurlock took on a month-long challenge to only eat McDonalds food. Spurlock experienced a multitude of health issues, including weight gain, cholesterol spike, and negative impacts on his energy and mood, demonstrating the fast-food chains’ instrumental role in America’s obesity epidemic (Stossel 2006). Spurlock’s film not only emphasized the consequences of caloric intake, but also brought light to the nutritional attributes of McDonalds menu items that caused adverse health effects. There are many factors that impact the quality and quantity of calories, such as levels of fat, protein, and carbohydrates, which is why many dieticians support the notion that  “not all calories are created equal” (Tolar-Peterson, 2021). Spurlock’s documentary and existing literature inspired an investigation of McDonalds menu items’ caloric and nutritional records. Our research will address the following question: What nutritional attribute is most closely associated with calories for the McDonalds menu items? We will analyze a 2018 dataset from Kaggle titled “Nutritional Facts for McDonald's Menu” to answer our research question. Our chosen dataset provides nutritional information for all of McDonald’s menu items, including calories, saturated fat, and cholesterol levels. 
+
+The menu items and nutritional facts in our dataset are extracted from the McDonald’s website (Kaggle 2016). The McDonalds Nutrition Calculator page provides information on how nutritional data were collected. According to McDonalds, existing nutritional data are “derived from testing conducted in accredited laboratories, published resources, or from information provided from McDonald's suppliers” (McDonalds 2017). The corporation also states that “ % Daily Value” nutritional data is based on a 2,000 calorie diet (McDonalds 2017). The McDonald’s nutritional calculator page provides the following message in fine print: 
+
+“All nutrition information is based on average values for ingredients and is rounded in accordance with current U.S. FDA NLEA regulations. Variation in serving sizes, preparation techniques, product testing and sources of supply, as well as regional and seasonal differences may affect the nutrition values for each product. In addition, product formulations change periodically. You should expect some variation in the nutrient content of the products purchased in our restaurants” (McDonalds 2017). 
+
+The Nutrition Labeling and Education Act (NLEA) requires corporations like McDonald’s to provide adequate nutritional information and labeling for menu items (FDA 2014). FDA NLEA guidelines provide clear and consistent nutritional labeling requirements, allowing consumers to make informed dietary choices for themselves and loved ones. 
+
+Our research aims to guide the inspection of a nutritional label and to provide adequate information on the nutritional attributes that best estimates calories. Therefore, we will employ a modeling approach which estimates the closest association between calories and nutritional attributes. To see which nutritional attribute is the best estimator for calories, we will create a linear model of each nutritional attribute with calories as the response variable. A linear model for regression analysis is useful in answering our question because it will allow us to confidently determine what nutritional attributes hold the closest association to calories.
 
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+### References
+
+Tolar-Peterson, Terezie. 2021. “Not all calories are created equal - a dietician explains the different ways the kinds of foods you eat matter to your body”. The Conversation. Retrieved Febuary 8th, 2022. https://theconversation.com/not-all-calories-are-equal-a-dietitian-explains-the-different-ways-the-kinds-of-foods-you-eat-matter-to-your-body-156900
+ 
+Stossel, John. 2006. “‘Super Size Me’ Carries Weight With Critics”. ABC News. Retrieved Febuary 8th, 2022. https://docs.google.com/document/d/1XB-22QylvnbasBKe7n_DfkkENcZWRvIR5X8vZgOK6LY/edit#
+
+```{r include=FALSE}
 library(tidyverse)
 library(knitr)
 library(broom)
@@ -21,42 +34,67 @@ library(patchwork)
 library(leaps)
 library(rms)
 library(modelr)
+library(tibble)
+library(kableExtra)
 ```
 
 
 # Our Data
 
-```{r}
+AISHA pls add the paragraph about how data was collected here
+
+A sample of data can be viewed below.
+
+```{r echo = FALSE, warning = FALSE}
 data <- read.csv("data/menu 2.csv")
-glimpse(data)
+kable(as_tibble(head(data))) %>% 
+  kable_styling(latex_options = c("scale_down", "HOLD_position", "stripes"))
 ```
 
 # Exploratory Data Analysis
-
-For this project, we understand that foods and beverages may have different predictors for their number of calories. Therefore, we will be splitting our dataset into two different dataframes: one for foods, and one for beverages.
 
 We will also be removing all predictors that have "as % of Daily Value" attached at the end, since our purpose is not focused the daily values of the nutrients. These predictors add no value to our dataset or models.
 
 The first thing we are doing is filtering out Total Fat (% Daily Value), Saturated Fat (% Daily Value), Cholesterol (% Daily Value), Sodium (% Daily Value), Carbohydrates (% Daily Value), Dietary Fiber (% Daily Value) from our nutritional attributes. These attributes don’t aid in answering our research question, so we are taking these predictor variables out of consideration. However, we will keep in Vitamin A (% Daily Value), Vitamin C (% Daily Value), Calcium (% Daily Value), and Iron (% Daily Value) since our dataset records these attributes only in terms of daily value percentage. 
 
-```{r}
+```{r include = FALSE, warning = FALSE}
 data <- data %>% 
   select(Category, Item, Serving.Size, Calories, Calories.from.Fat, Total.Fat,
          Saturated.Fat, Trans.Fat, Cholesterol, Sodium, Carbohydrates,
          Dietary.Fiber, Sugars, Protein, Vitamin.A....Daily.Value.,
          Vitamin.C....Daily.Value., Calcium....Daily.Value., Iron....Daily.Value.)
-
-glimpse(data)
 ```
 
 
-```{r}
+In order to accurately compare the estimators, we want to standardize them first. To do this, we make sure every estimator is centered around a mean of zero with a variance of one. We create a new variable for each existing variable; this new variable contains the calculation of the formula $ new = (existing - mean(existing) / std_dev(existing)$
+
+```{r echo = FALSE, warning = FALSE}
+data <- data %>% 
+  mutate(
+    Total.Fat.cent = (Total.Fat - mean(Total.Fat)) / sd(Total.Fat),
+    Saturated.Fat.cent = (Saturated.Fat - mean(Saturated.Fat)) / sd(Saturated.Fat),
+    Trans.Fat.cent = (Trans.Fat - mean(Trans.Fat)) / sd(Trans.Fat),
+    Cholesterol.cent = (Cholesterol - mean(Cholesterol)) / sd(Cholesterol),
+    Sodium.cent = (Sodium - mean(Sodium)) / sd(Sodium),
+    Carbohydrates.cent = (Carbohydrates - mean(Carbohydrates)) / sd(Carbohydrates),
+    Dietary.Fiber.cent = (Dietary.Fiber - mean(Dietary.Fiber)) / sd(Dietary.Fiber),
+    Sugars.cent = (Sugars - mean(Sugars)) / sd(Sugars),
+    Protein.cent = (Protein - mean(Protein)) / sd(Protein),
+    Vitamin.A....Daily.Value.cent = (Vitamin.A....Daily.Value. - mean(Vitamin.A....Daily.Value.)) / sd(Vitamin.A....Daily.Value.),
+    Vitamin.C....Daily.Value.cent = (Vitamin.C....Daily.Value. - mean(Vitamin.C....Daily.Value.)) / sd(Vitamin.C....Daily.Value.),
+    Calcium....Daily.Value.cent = (Calcium....Daily.Value. - mean(Calcium....Daily.Value.)) / sd(Calcium....Daily.Value.),
+    Iron....Daily.Value.cent = (Iron....Daily.Value. - mean(Iron....Daily.Value.)) / sd(Iron....Daily.Value.),
+  )
+
+```
+
+```{r include = FALSE}
 count(data, Category)
 ```
 
-Next, we are dividing our categorical variables between food items (Breakfast, Beef & Pork, Chicken & Fish, Salads, Snacks & Sides, Desserts) and drink items (Coffee and Tea, Smoothies and Shakes, Beverages).
+The dataset we are using contains a "Category" feature, which displays the type of food that McDonald's classifies the menu item as. We use this feature to divide our observations between food items (Breakfast, Beef & Pork, Chicken & Fish, Salads, Snacks & Sides, Desserts) and drink items (Coffee and Tea, Smoothies and Shakes, Beverages). The purpose of this is because we hypothesize that foods and beverages will have different best estimators. Most beverages do not have cholesterol or trans fats, so we think most of their calories will be tied to sugars.
 
-```{r}
+```{r echo = FALSE, warning = FALSE}
 food_data <- data %>% 
   filter(Category == "Beef & Pork" |
          Category == "Breakfast" |
@@ -70,247 +108,283 @@ bev_data <- data %>%
          Category == "Coffee & Tea" |
          Category == "Smoothies & Shakes")
 ```
-
  
+A sample of the final version of our datasets (food and beverage) can be viewed below. 
+
+Food Data:
+
+```{r echo = FALSE, warning = FALSE}
+kable(as_tibble(head(food_data)))  %>% 
+  kable_styling(latex_options = c("scale_down", "HOLD_position", "stripes"))
+```
+
+Beverage Data:
+
+```{r echo = FALSE, warning = FALSE}
+kable(as_tibble(head(bev_data)))  %>% 
+  kable_styling(latex_options = c("scale_down", "HOLD_position", "stripes"))
+
+```
+
 ### Response Variable
 
-The next step is to create histograms for occurences of food items (food_data) and occurences of drink items (bev_data) against our response variable (calories). Based on the plots below, it seems that for both datasets, the Calories variable follows a normal distribution.
+The next step is to create histograms for occurences of food items (food_data) and occurences of drink items (bev_data) against our response variable (calories). Based on the plots below, it seems that for both datasets, the Calories variable follows a normal distribution. 
+^ AISHA can u add a sentence why the normal distribution is a good thing
 
-```{r}
-ggplot(data=food_data, aes(x=Calories)) +
-  geom_histogram() +
-  labs(title="Histogram of Response Variable",
+```{r echo = FALSE, fig.width = 5, fig.height = 3, warning = FALSE}
+p1 <- ggplot(data=food_data, aes(x=Calories)) +
+  geom_histogram(bins=30) +
+  labs(title="Histogram of Response Variable for Food",
        x="Number of Calories",
        y="Number of Occurrences")
 
-ggplot(data=bev_data, aes(x=Calories)) +
-  geom_histogram() +
-  labs(title="Histogram of Response Variable",
+p2  <- ggplot(data=bev_data, aes(x=Calories)) +
+  geom_histogram(bins=30) +
+  labs(title="Histogram of Response Variable for Beverages",
        x="Number of Calories",
        y="Number of Occurrences")
+
+p1 + p2
 ```
 
-Now we calculate the appropriate summary statistics for calories (mean, median, standard deviation, IQR) for food items and drink items.
+The summary statistics for calories (mean, median, standard deviation, IQR) for food items and drink items is also displayed below. Notice that for both datasets, the mean is larger than the median. This is likely attributed to the fact that there are many items that McDonald's advertises as "Zero Calories". The large group of zero calorie items acts as an outlier for our normal distribution and brings the median down without affecting the mean as much.
 
-```{r}
-food_data %>% 
+Food Data:
+```{r echo = FALSE}
+t1 <- food_data %>% 
   summarise(mean = mean(Calories),
             median = median(Calories),
             std_dev = sd(Calories),
             iqr = IQR(Calories))
 
-bev_data %>% 
+t2 <- bev_data %>% 
   summarise(mean = mean(Calories),
             median = median(Calories),
             std_dev = sd(Calories),
             iqr = IQR(Calories))
+
+kable(t1, format = "markdown")
 ```
+
+Beverage Data:
+```{r}
+kable(t2, format = "markdown")
+```
+
+### Estimator Variables
+
+We also want to view a plot of each variable's relationship with our response. Below is every plot that describes the food dataset. 
+^ AISHA can you add some here that talks about what the plots are showing and why we are showing them
+
+```{r echo = FALSE, fig.width = 17, fig.height = 17, warning = FALSE}
+p3 <- ggplot(data = food_data, aes(x = Calories, y = Total.Fat.cent)) +
+               geom_point() +
+               labs(title = "FOOD: Calories vs. Total Fat")
+
+p4 <- ggplot(data = food_data, aes(x = Calories, y = Saturated.Fat.cent)) +
+               geom_point() +
+               labs(title = "FOOD: Calories vs. Saturated Fat")
+
+p5 <- ggplot(data = food_data, aes(x = Calories, y = Trans.Fat.cent)) +
+               geom_point() +
+               labs(title = "FOOD: Calories vs. Trans Fat")
+
+p6 <- ggplot(data = food_data, aes(x = Calories, y = Cholesterol.cent)) +
+               geom_point() +
+               labs(title = "FOOD: Calories vs. Cholesterol")
+
+p7 <- ggplot(data = food_data, aes(x = Calories, y = Sodium.cent)) +
+               geom_point() +
+               labs(title = "FOOD: Calories vs. Sodium")
+
+p8 <- ggplot(data = food_data, aes(x = Calories, y = Carbohydrates.cent)) +
+               geom_point() +
+               labs(title = "FOOD: Calories vs. Carbohydrates")
+
+p9 <- ggplot(data = food_data, aes(x = Calories, y = Dietary.Fiber.cent)) +
+               geom_point() +
+               labs(title = "FOOD: Calories vs. Dietary Fiber")
+
+p10 <- ggplot(data = food_data, aes(x = Calories, y = Protein.cent)) +
+               geom_point() +
+               labs(title = "FOOD: Calories vs. Protein")
+
+<<<<<<< HEAD
+When first starting the analysis we decided to divide our data between food and drink items on the assumption that they have different caloric makeups. We split our dataset between food menu items (Breakfast, Beef & Pork, Chicken & Fish, Salads, Snacks & Sides, Desserts) and drink menu items (Coffee and Tea, Smoothies and Shakes, Beverages). For food menu items, we hypothesized total carbohydrates (grams) was most closely associated to calories. For drink menu items, we hypothesized that total sugar (grams) was most closely associated to calories. Upon completing Exploratory Data Analysis, Regression, and Model Selection, our final models (food_model_aic and bev_model_aic) indicated that best 3 predictors (nutritional attributes) were the same for food and beverage items. We then decided it would be best for our final model to encompass food and beverage data together. Our modeling objective benefits from a bigger dataset, as predictions are more accurate when working with a bigger dataset.
+=======
+p11 <- ggplot(data = food_data, aes(x = Calories, y = Sugars.cent)) +
+               geom_point() +
+               labs(title = "FOOD: Calories vs. Sugars")
+>>>>>>> 516fefa58658964c16009afa111172b1191e6535
+
+p12 <- ggplot(data = food_data, aes(x = Calories, y = Vitamin.A....Daily.Value.cent)) +
+               geom_point() +
+               labs(title = "FOOD: Calories vs. Vitamin A")
+
+p13 <- ggplot(data = food_data, aes(x = Calories, y = Vitamin.C....Daily.Value.cent)) +
+               geom_point() +
+               labs(title = "FOOD: Calories vs. Vitamin C")
+
+p14 <- ggplot(data = food_data, aes(x = Calories, y = Calcium....Daily.Value.cent)) +
+               geom_point() +
+               labs(title = "FOOD: Calories vs. Calcium")
+
+p15 <- ggplot(data = food_data, aes(x = Calories, y = Iron....Daily.Value.cent)) +
+               geom_point() +
+               labs(title = "FOOD: Calories vs. Iron")
+
+p3 + p4 + p5 + p6 + p7 +  p8 + p9 + p10 + p11 + p12 + p13 + p14 + p15
+```
+
+Below is every plot that describes the beverage dataset.
+^ AISHA can you add some here that talks about what the plots are showing and why we are showing them
+
+```{r echo = FALSE, fig.width = 17, fig.height = 17, warning = FALSE}
+p3 <- ggplot(data = bev_data, aes(x = Calories, y = Total.Fat.cent)) +
+               geom_point() +
+               labs(title = "BEV: Calories vs. Total Fat")
+
+p4 <- ggplot(data = bev_data, aes(x = Calories, y = Saturated.Fat.cent)) +
+               geom_point() +
+               labs(title = "BEV: Calories vs. Saturated Fat")
+
+p5 <- ggplot(data = bev_data, aes(x = Calories, y = Trans.Fat.cent)) +
+               geom_point() +
+               labs(title = "BEV: Calories vs. Trans Fat")
+
+p6 <- ggplot(data = bev_data, aes(x = Calories, y = Cholesterol.cent)) +
+               geom_point() +
+               labs(title = "BEV: Calories vs. Cholesterol")
+
+p7 <- ggplot(data = bev_data, aes(x = Calories, y = Sodium.cent)) +
+               geom_point() +
+               labs(title = "BEV: Calories vs. Sodium")
+
+p8 <- ggplot(data = bev_data, aes(x = Calories, y = Carbohydrates.cent)) +
+               geom_point() +
+               labs(title = "BEV: Calories vs. Carbohydrates")
+
+p9 <- ggplot(data = bev_data, aes(x = Calories, y = Dietary.Fiber.cent)) +
+               geom_point() +
+               labs(title = "BEV: Calories vs. Dietary Fiber")
+
+p10 <- ggplot(data = bev_data, aes(x = Calories, y = Protein.cent)) +
+               geom_point() +
+               labs(title = "BEV: Calories vs. Protein")
+
+p11 <- ggplot(data = bev_data, aes(x = Calories, y = Sugars.cent)) +
+               geom_point() +
+               labs(title = "BEV: Calories vs. Sugars")
+
+p12 <- ggplot(data = bev_data, aes(x = Calories, y = Vitamin.A....Daily.Value.cent)) +
+               geom_point() +
+               labs(title = "BEV: Calories vs. Vitamin A")
+
+p13 <- ggplot(data = bev_data, aes(x = Calories, y = Vitamin.C....Daily.Value.cent)) +
+               geom_point() +
+               labs(title = "BEV: Calories vs. Vitamin C")
+
+p14 <- ggplot(data = bev_data, aes(x = Calories, y = Calcium....Daily.Value.cent)) +
+               geom_point() +
+               labs(title = "BEV: Calories vs. Calcium")
+
+p15 <- ggplot(data = bev_data, aes(x = Calories, y = Iron....Daily.Value.cent)) +
+               geom_point() +
+               labs(title = "BEV: Calories vs. Iron")
+
+p3 + p4 + p5 + p6 + p7 +  p8 + p9 + p10 + p11 + p12 + p13 + p14 + p15
+```
+
+
+
 
 ### Model Selection with AIC
-The code below creates a linear model for McDonalds food menu items and displays the model output.  
 
-```{r}
-food_model = lm(Calories ~ Total.Fat + Saturated.Fat + Trans.Fat + Cholesterol + Sodium + Carbohydrates +
-         Dietary.Fiber + Sugars + Protein + Vitamin.A....Daily.Value. +
-         Vitamin.C....Daily.Value. + Calcium....Daily.Value. + Iron....Daily.Value., data = food_data)
+In order to conduct our experiment, we create a model that uses Calories as a response variable, and all centered variables as estimators. 
 
-tidy(food_model, conf.int = TRUE) %>% 
-  kable(format="markdown", digits = 5)
+The coefficients of our food model are displayed below.
+
+```{r echo = FALSE, warning = FALSE}
+food_model = lm(Calories ~ Total.Fat.cent + Saturated.Fat.cent + Trans.Fat.cent + Cholesterol.cent + Sodium.cent + Carbohydrates.cent +
+         Dietary.Fiber.cent + Sugars.cent + Protein.cent + Vitamin.A....Daily.Value.cent +
+         Vitamin.C....Daily.Value.cent + Calcium....Daily.Value.cent + Iron....Daily.Value.cent, data = food_data)
+
+tidy(food_model) %>% 
+  kable(format="markdown", digits = 3)
 ```
+In mathematical terms, we are creating an equation for a  line where the x values are values of our estimators, and the y value is the response variable.
 
-The code below creates a linear model for McDonald's drink menu items and displays the model output.
+The equation for our food dataset can be read as the following:
 
-```{r}
-bev_model = lm(Calories ~ Total.Fat + Sodium + Carbohydrates + Sugars + Protein + Vitamin.A....Daily.Value. +
-         Vitamin.C....Daily.Value. + Calcium....Daily.Value. + Iron....Daily.Value., data = bev_data)
+$Calories = 371.196 + 126.483(Total.Fat) + 3.433(Saturated.Fat)  + 0.563(Trans.Fat) - 0.812(Cholesterol) - 1.035(Sodium) + 116.617(Carbohydrates) - 2.116(Dietary.Fiber) - 1.728(Sugars) + 45.460(Protein) + 0.405(Vitamin.A....Daily.Value) + 1.105(Vitamin.C....Daily.Value)  - 0.921(Calcium....Daily.Value) - 0.576(Iron....Daily.Value)$
 
-tidy(bev_model, conf.int = TRUE) %>% 
-  kable(format="markdown", digits = 5)
+The coeficients of our food model are displayed below.
+
+```{r echo = FALSE, warning = FALSE}
+bev_model = lm(Calories ~ Total.Fat.cent + Saturated.Fat.cent + Trans.Fat.cent + Cholesterol.cent + Sodium.cent + Carbohydrates.cent + Dietary.Fiber.cent + Sugars.cent + Protein.cent + Vitamin.A....Daily.Value.cent + Vitamin.C....Daily.Value.cent + Calcium....Daily.Value.cent + Iron....Daily.Value.cent, data = bev_data)
+
+tidy(bev_model) %>% 
+  kable(format="markdown", digits = 3)
 ```
+The equation for our food dataset can be read as the following:
 
-Now, we will select a model for food items using AIC. We are using the step function in R to conduct backward selection using AIC as the selection criterion, and storing the selected model as food_model_select_aic. Finally, we display the coefficients of the selected model.  
+$Calories = 356.609 + 103.013(Total.Fat) + 15.861(Saturated.Fat) + 0.495(Trans.Fat) - 0.848(Cholesterol) - 8.990(Sodium) + 117.309(Carbohydrates) - 2.998(Dietary.Fiber) - 8.659(Sugars) + 35.835(Protein) + 3.869(Vitamin.A....Daily.Value) + 1.712(Vitamin.C....Daily.Value) + 6.326(Calcium....Daily.Value) - 3.456(Iron....Daily.Value)$
 
-```{r}
-food_model_select_aic <- step(food_model, direction = "backward")
-tidy(food_model_select_aic) %>% 
-  kable(format="markdown", digits=3)
+Because all of the variables have been standardized, they all have a mean of zero and a variance of one. This means that the coefficients for each model can be very easily compared with one another. Higher coefficients represent a greater relationship between the variable and the response, and lower coefficients represent a lesser relationship between the variable and the response.
 
-coef(food_model_select_aic, 4)
-```
-For food products, the predictors that give us the best model for predicting calorie count are:
-  -Total.Fat
-  -Saturated.Fat
-  -Trans.Fat
-  -Cholesterol
-  -Sodium
-  -Carbohydrates
-  -Dietary.Fiber
-  -Sugars
-  -Protein
-  -Vitamin.A….Daily.Value.
-  -Vitamin.C….Daily.Value.
-  -Calcium….Daily.Value.
-  -Iron….Daily.Value.
+Undoubtedly, the estimators with the greatest relationship to calorie count in both foods and beverages are Total Fat, Carbohydrates, and Protein. As an aside, we did not hypothesize that calcium would have a significant effect on beverages. Thinking back, this result makes sense because milk-based beverages are both high in calcium and calories.
+
+When first starting the analysis we decided to divide our data between food and drink items on the assumption that they have different caloric makeups. We split our dataset between food menu items (Breakfast, Beef & Pork, Chicken & Fish, Salads, Snacks & Sides, Desserts) and drink menu items (Coffee and Tea, Smoothies and Shakes, Beverages). For food menu items, we hypothesized total carbohydrates (grams) was the most accurate estimator of calories. For drink menu items, we hypothesized that total sugar (grams) was the most accurate estimator of calories. Upon completing our Exploratory Data Analysis and experiment, we concluded that best 3 estimators (nutritional attributes) were the same for food and beverage items. Thus, splitting the data did not lead to different results. If the same experiment were performed without splitting the dataset, we can expect Total Fat, Carbohydrates, and Protein to remain the highest coefficients.
+
+# Checking Assumptions
+
+Before accepting our results as truth, we must inspect where the data and the model come from. There are certain assumptions we were accepting as truth when conducting our experiment. In order to confirm our results, we must verify that our prior assumptions are correct.
+
+Constant Variance
+AISHA can you write about how these plots were created and explain that the constant variance assumption is satisfied
+
+```{r echo = FALSE}
+ggplot(data = food_model, aes(x = food_model$fitted.values, y = food_model$residuals)) +
+  geom_point() +
+  geom_abline(slope = 0, intercept= 0, colour = "red") +
+  labs(x = "Predicted Values of Food Model",
+       y = "Residuals of Food Model")
   
-Now, we will select a model for drink items using AIC. We are using the step function in R to conduct backward selection using AIC as the selection criterion, and storing the selected model as bev_model_select_aic. Finally, we display the coefficients of the selected model.
-
-```{r}
-bev_model_select_aic <- step(bev_model, direction = "backward")
-tidy(bev_model_select_aic) %>% 
-  kable(format="markdown", digits=3)
-
-coef(bev_model_select_aic, 4)
 ```
-For Beverages, the predictors that give us the best model for predicting calorie count are:
-  -Total.Fat
-  -Sodium
-  -Carbohydrates
-  -Sugars
-  -Protein
-  -Vitamin.A….Daily.Value.
-  -Vitamin.C….Daily.Value.
-  -Calcium….Daily.Value.
-  -Iron….Daily.Value.
-
-
-The code and its output below show us that the best predictors of food calories in order are Total Fat, Carbohydrates, and Protein.
-```{r}
-food_models <- regsubsets(Calories ~ Total.Fat + Saturated.Fat + Trans.Fat + Cholesterol + Sodium + Carbohydrates +
-         Dietary.Fiber + Sugars + Protein + Vitamin.A....Daily.Value. +
-         Vitamin.C....Daily.Value. + Calcium....Daily.Value. + Iron....Daily.Value., data = food_data, method="backward")
-summary(food_models)
-```
-
-
-The code and its output below show us that the best predictors of beverage calories in order are  Carbohydrates, Total Fat, and Protein
-```{r}
-bev_models <- regsubsets(Calories ~ Total.Fat + Saturated.Fat + Trans.Fat + Cholesterol + Sodium + Carbohydrates +
-         Dietary.Fiber + Sugars + Protein + Vitamin.A....Daily.Value. +
-         Vitamin.C....Daily.Value. + Calcium....Daily.Value. + Iron....Daily.Value., data = bev_data, method="backward")
-summary(bev_models)
-```
-
-When first starting the analysis we decided to divide our data between food and drink items on the assumption that they have different caloric makeups. We split our dataset between food menu items (Breakfast, Beef & Pork, Chicken & Fish, Salads, Snacks & Sides, Desserts) and drink menu items (Coffee and Tea, Smoothies and Shakes, Beverages). For food menu items, we hypothesized total carbohydrates (grams) was most closely associated to calories. For drink menu items, we hypothesized that total sugar (grams) was most closely associated to calories. Upon completing Exploratory Data Analysis, Regression, and Model Selection, our final models (food_model_aic and bev_model_aic) indicated that best 3 predictors (nutritional attributes) were the same for food and beverage items. We then decided it would be best for our final model to encompass food and beverage data together. Our modeling objective benefits from a bigger dataset, as predictions are more accurate when working with a bigger dataset.
-
-### Model Selection with K-fold Cross Validoation
-
-We will be comparing the predictors mentioned above regarding their relationship to Calories. For food and beverages, we will create four models each: one with each variable as the singular predictor. We will compare these models using K-fold Cross Validation, where k = 5.
-
-```{r}
-set.seed(5747108)
-folded_data <- crossv_kfold(data, 5)
-```
-
-Testing the Total Fat predictor:
-```{r}
-models_fat <- map(folded_data$train, 
-              ~ lm(Calories ~ Total.Fat, data = .))
-models_fat
-```
-
-```{r}
-train_mse_fat <- map2_dbl(models_fat, folded_data$train, mse)
-test_mse_fat <- map2_dbl(models_fat, folded_data$test, mse)
-
-fat <- tibble(
-  1:5,
-  train_mse_fat, 
-  test_mse_fat
-)
-
-fat %>%
-  summarise(mean_train_mse = mean(train_mse_fat), 
-           mean_test_mse = mean(test_mse_fat))
-```
-
-Testing the Carbohydrates predictor:
-```{r}
-models_carb <- map(folded_data$train, 
-              ~ lm(Calories ~ Carbohydrates, data = .))
-models_carb
-```
-
-```{r}
-train_mse_carb <- map2_dbl(models_carb, folded_data$train, mse)
-test_mse_carb <- map2_dbl(models_carb, folded_data$test, mse)
-
-carb <- tibble(
-  test_fold = 1:5,
-  train_mse_carb, 
-  test_mse_carb
-)
-
-carb %>%
-  summarise(mean_train_mse = mean(train_mse_carb), 
-           mean_test_mse = mean(test_mse_carb))
-
-```
-
-
-Testing the Protein predictor:
-```{r}
-models_protein <- map(folded_data$train, 
-              ~ lm(Calories ~ Protein, data = .))
-models_protein
-```
-
-```{r}
-train_mse_protein <- map2_dbl(models_protein, folded_data$train, mse)
-test_mse_protein <- map2_dbl(models_protein, folded_data$test, mse)
-
-protein <- tibble(
-  1:5,
-  train_mse_protein, 
-  test_mse_protein
-)
-
-protein %>%
-  summarise(mean_train_mse = mean(train_mse_protein), 
-           mean_test_mse = mean(test_mse_protein))
-```
-
-From our K-fold cross validation test, we can conclude that Total Fat is the best singular predictor of Calories, which goes against our hypothesis. We see that Protein and Carbohydrates have similar effectiveness in predicting calories, but total fat content is about twice as effective. 
-
-# Final Model
-
-The final model for our project represents calories as a linear function of Total Fat. The equation for this relationship is $Calories = 15.297 * Total.Fat + 151.588$. 
-```{r}
-final_model <- lm(Calories ~ Total.Fat, data=data)
-
-tidy(final_model) %>% 
-  kable(format="markdown", digits = 5)
-```
-
-### Checking the Model Assumptions
-
-```{r}
-final_model <- augment(final_model, type.predict = "response",type.residuals = "deviance")
-glimpse(final_model)
-```
-
-Based on the plot below, the normality assumption is satisfied because our model's residuals follow a normal distribution with mean zero.
-```{r}
-hist(final_model$.resid)
-```
-
-
-Based on the plot below, the constant variance assumption is satisfied because there is no fan pattern when comparing our fitted values to our residuals. The variance remains relatively constant throughout all of our model's fitted values, despite some outliers.
-```{r}
-ggplot(data = final_model, aes(x=.fitted, y=.resid)) +
+```{r echo = FALSE}
+ggplot(data = bev_model, aes(x = bev_model$fitted.values, y = bev_model$residuals)) +
   geom_point() +
-  labs(title="Residuals vs Predicted Values",
-       x="Fitted Values",
-       y="Residuals")
+  geom_abline(slope = 0, intercept= 0, colour = "red") +
+  labs(x = "Predicted Values of Beverage Model",
+       y = "Residuals of Beverage Model")
+  
 ```
 
-Based on the plot below, the linearity assumption is satisfied because there is a very clear linear relationship between our fitted values and our predictor. This is obvious because our model is a linear relationship between only one predictor and the response variable.
-```{r}
-ggplot(data = final_model, aes(x=.fitted, y=Total.Fat)) +
-  geom_point() +
-  labs(title="Fitted Values vs Total Fat",
-       x="Fitted Values",
-       y="Total Fat")
+
+Linearity
+
+The plots on page 4 and 5 show that for both food and beverages, there are linear relationships between calories and other nutritional attributes. This tells us that the linearity assumption is satisfied.
+
+Normality
+AISHA can you explain the same for the normality assumption
+
+```{r  echo = FALSE}
+ggplot(data = food_model, aes(x = food_model$fitted.values)) +
+  geom_histogram(bins = 30) +
+  labs(x = "Fitted Values of Calories",
+       y = "Number of Observations",
+       title = "Food Model: Histogram of Fitted Values")
 ```
+```{r  echo = FALSE}
+ggplot(data = bev_model, aes(x = bev_model$fitted.values)) +
+  geom_histogram(bins = 30) +
+  labs(x = "Fitted Values of Calories",
+       y = "Number of Observations",
+       title = "Beverage Model: Histogram of Fitted Values")
+```
+
+
+Independence
 
 A crucial assumption of linear regression is the independence of observations. Looking at how our data was collected will indicate if the independence assumption is satisfied or not. Given that our dataset consists of nutritional attributes for each McDonalds menu item, each observation is independent. A menu item’s observed nutritional attributes does not rely on other menu items. In part by FDA Menu Labeling Requirements (2020) the process by which our data was collected ensures data validity and that we are working with a random sample. 
 
