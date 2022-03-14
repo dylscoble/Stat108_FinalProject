@@ -125,6 +125,7 @@ kable(as_tibble(head(bev_data)))  %>%
 
 ```
 
+
 ### Response Variable
 
 The next step is to create histograms for occurrences of food items (food_data) and occurrences of drink items (bev_data) against our response variable (calories). Based on the plots below, it seems that for both datasets, the Calories variable follows a normal distribution. A normal distribution tells us that data is centered around the mean and there are no obvious outliers. Additionally, a normal distribution is a good indicator of data independence. 
