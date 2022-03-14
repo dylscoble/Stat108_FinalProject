@@ -200,10 +200,6 @@ p10 <- ggplot(data = food_data, aes(x = Calories, y = Protein.cent)) +
 p11 <- ggplot(data = food_data, aes(x = Calories, y = Sugars.cent)) +
                geom_point() +
                labs(title = "FOOD: Calories vs. Sugars")
-<<<<<<< HEAD
-
-=======
->>>>>>> 8929d09ccead9a3fe437055c959716444c317325
 
 p12 <- ggplot(data = food_data, aes(x = Calories, y = Vitamin.A....Daily.Value.cent)) +
                geom_point() +
