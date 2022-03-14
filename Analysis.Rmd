@@ -287,7 +287,7 @@ p15 <- ggplot(data = bev_data, aes(x = Calories, y = Iron....Daily.Value.cent)) 
 p3 + p4 + p5 + p6 + p7 +  p8 + p9 + p10 + p11 + p12 + p13 + p14 + p15
 ```
 
-### Model Selection with AIC
+### Procedure and Results
 
 In order to conduct our experiment, we create a model that uses Calories as a response variable, and all centered variables as estimators. 
 
