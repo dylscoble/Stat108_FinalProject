@@ -308,7 +308,7 @@ The equation for our food dataset can be read as the following:
 
 $Calories = 371.196 + 126.483(Total.Fat) + 3.433(Saturated.Fat)  + 0.563(Trans.Fat) - 0.812(Cholesterol) - 1.035(Sodium) + 116.617(Carbohydrates) - 2.116(Dietary.Fiber) - 1.728(Sugars) + 45.460(Protein) + 0.405(Vitamin.A....Daily.Value) + 1.105(Vitamin.C....Daily.Value)  - 0.921(Calcium....Daily.Value) - 0.576(Iron....Daily.Value)$
 
-The coeficients of our food model are displayed below.
+The coeficients of our beverage model are displayed below.
 
 ```{r echo = FALSE, warning = FALSE}
 bev_model = lm(Calories ~ Total.Fat.cent + Saturated.Fat.cent + Trans.Fat.cent + Cholesterol.cent + Sodium.cent + Carbohydrates.cent + Dietary.Fiber.cent + Sugars.cent + Protein.cent + Vitamin.A....Daily.Value.cent + Vitamin.C....Daily.Value.cent + Calcium....Daily.Value.cent + Iron....Daily.Value.cent, data = bev_data)
