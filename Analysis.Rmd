@@ -19,12 +19,6 @@ The Nutrition Labeling and Education Act (NLEA) requires corporations like McDon
 Our research aims to guide the inspection of a nutritional label and to provide adequate information on the nutritional attributes that best estimates calories. Therefore, we will employ a modeling approach which estimates the closest association between calories and nutritional attributes. To see which nutritional attribute is the best estimator for calories, we will create a linear model of each nutritional attribute with calories as the response variable. A linear model for regression analysis is useful in answering our question because it will allow us to confidently determine what nutritional attributes hold the closest association to calories.
 
 
-### References
-
-Tolar-Peterson, Terezie. 2021. “Not all calories are created equal - a dietician explains the different ways the kinds of foods you eat matter to your body”. The Conversation. Retrieved Febuary 8th, 2022. https://theconversation.com/not-all-calories-are-equal-a-dietitian-explains-the-different-ways-the-kinds-of-foods-you-eat-matter-to-your-body-156900
- 
-Stossel, John. 2006. “‘Super Size Me’ Carries Weight With Critics”. ABC News. Retrieved Febuary 8th, 2022. https://docs.google.com/document/d/1XB-22QylvnbasBKe7n_DfkkENcZWRvIR5X8vZgOK6LY/edit#
-
 ```{r include=FALSE}
 library(tidyverse)
 library(knitr)
